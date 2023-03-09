@@ -1,7 +1,7 @@
 version: "3.9"
 
 volumes:
-  envisage_news_data: {}
+  company_scraper: {}
 
 services:
   mongodb:
@@ -9,7 +9,4 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - envisage_news_data:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=password
+      - company_scraper:/data/db

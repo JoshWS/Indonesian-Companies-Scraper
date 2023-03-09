@@ -94,9 +94,13 @@ ROTATING_PROXY_BACKOFF_CAP = 1200
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-# ITEM_PIPELINES = {
-#    'company_scraper.pipelines.CompanyScraperPipeline': 300,
-# }
+ITEM_PIPELINES = {
+    "company_scraper.mongo.MongoDBPipeline": 500,
+}
+
+
+FEED_EXPORT_FIELDS = ["name"]
+
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
