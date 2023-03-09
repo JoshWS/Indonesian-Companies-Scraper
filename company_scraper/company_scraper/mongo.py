@@ -1,10 +1,7 @@
 # https://github.com/VigilantePolitico/vigilante/raw/9935c2821e4ad17e083bf22ea237d379ffbda8cb/vigilante/pipelines/mongo.py
 import logging
-from .items import CompanyScraperItem
-from company_scraper.models import Company
 from mongoengine import connect
 from itemadapter import ItemAdapter
-from scrapy.exceptions import DropItem
 
 logger = logging.getLogger("mongo")
 

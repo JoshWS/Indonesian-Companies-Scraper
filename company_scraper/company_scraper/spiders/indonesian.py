@@ -14,10 +14,8 @@ class IndonesianSpider(Spider):
     allowed_domains = ["companieshouse.id"]
 
     def start_requests(self):
-        #   135502
-        for page in range(1, 6):
+        for page in range(1, 135502):
             url = f"https://companieshouse.id/?term=&page={page}"
-            print("START REQUEST")
             yield Request(
                 url,
                 callback=self.parse,
@@ -25,9 +23,11 @@ class IndonesianSpider(Spider):
 
     def parse(self, response):
         l = ItemLoader(item=CompanyScraperItem(), response=response)
-        l.add_xpath(
-            "name",
+        names = l.get_xpath(
             "//ul[@class='py-2 text-sm']/li/div/a[1]/@title",
             MapCompose(str.strip),
         )
+        for name in names:
+            l.add_value("name", name)
+
         return l.load_item()
