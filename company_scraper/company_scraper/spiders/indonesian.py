@@ -14,8 +14,8 @@ class IndonesianSpider(Spider):
     allowed_domains = ["companieshouse.id"]
 
     def start_requests(self):
-    #   135502
-        for page in range(1, 11):
+        #   135502
+        for page in range(1, 6):
             url = f"https://companieshouse.id/?term=&page={page}"
             print("START REQUEST")
             yield Request(
