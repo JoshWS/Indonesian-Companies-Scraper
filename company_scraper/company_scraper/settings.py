@@ -64,6 +64,8 @@ DOWNLOADER_MIDDLEWARES = {
     "scrapy_fake_useragent.middleware.RetryUserAgentMiddleware": 401,
 }
 
+HTTPERROR_ALLOW_ALL = False
+
 ENABLE_ROTATING_PROXIES = False
 if ENABLE_ROTATING_PROXIES:
     DOWNLOADER_MIDDLEWARES["rotating_proxies.middlewares.RotatingProxyMiddleware"] = 555

@@ -14,19 +14,20 @@ class IndonesianSpider(Spider):
     allowed_domains = ["companieshouse.id"]
 
     def start_requests(self):
-        searches = ["bui"]
+        searches = ["aaa", "abc"]
         for search in searches:
             url = f"https://companieshouse.id/?term={search}"
             yield Request(
-                url,
-                callback=self.parse,
+                url, callback=self.parse, errback=self.errback, dont_filter=True
             )
 
     def parse(self, response):
         yield self.parse_pages(response)
         next_page = response.xpath("//a[@rel='next']/@href").extract_first()
         if next_page is not None:
-            yield response.follow(next_page, callback=self.parse)
+            yield response.follow(
+                next_page, callback=self.parse, errback=self.errback, dont_filter=True
+            )
 
     def parse_pages(self, response):
         l = ItemLoader(item=CompanyScraperItem(), response=response)
@@ -38,3 +39,11 @@ class IndonesianSpider(Spider):
             l.add_value("name", name)
 
         return l.load_item()
+
+    def errback(self, failure):
+        yield Request(
+            failure.value.response.url,
+            callback=self.parse,
+            errback=self.errback,
+            dont_filter=True,
+        )
