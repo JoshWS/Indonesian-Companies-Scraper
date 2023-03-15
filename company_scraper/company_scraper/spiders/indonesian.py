@@ -14,9 +14,11 @@ class IndonesianSpider(Spider):
     allowed_domains = ["companieshouse.id"]
 
     def start_requests(self):
-        searches = ["aaa", "abc"]
-        for search in searches:
-            url = f"https://companieshouse.id/?term={search}"
+        with open("company_scraper/search_terms.txt") as f:
+            terms = f.readlines()
+        for term in terms:
+            term = term.replace("\n", "")
+            url = f"https://companieshouse.id/?term={term}"
             yield Request(
                 url, callback=self.parse, errback=self.errback, dont_filter=True
             )
