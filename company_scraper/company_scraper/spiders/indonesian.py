@@ -29,7 +29,7 @@ class IndonesianSpider(Spider):
         else:
             alpha = list(string.ascii_lowercase)
             alpha.reverse()
-            alpha_stop = alpha[:1]
+            alpha_stop = alpha[:18]
             alpha_all = alpha
             with open("company_scraper/search_terms.txt") as f:
                 terms = f.readlines()
@@ -37,8 +37,8 @@ class IndonesianSpider(Spider):
                     skip = g.readlines()
                     print(skip)
                 for letter1 in alpha_stop:
-                    for letter2 in alpha_stop:
-                        for letter3 in alpha_stop:
+                    for letter2 in alpha_all:
+                        for letter3 in alpha_all:
                             term = f"{letter1}{letter2}{letter3}"
                             if f"{term}\n" not in terms:
                                 if f"{term}\n" not in skip:
