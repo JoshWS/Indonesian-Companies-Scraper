@@ -6,7 +6,6 @@ from scrapy.spiders import Spider
 from scrapy.exceptions import IgnoreRequest
 import string
 
-# from news_scrapers.helpers import clean_html, re_replace, remove_tags
 from company_scraper.items import CompanyScraperItem
 
 GENERATE_TERMS = False
@@ -35,7 +34,6 @@ class IndonesianSpider(Spider):
                 terms = f.readlines()
                 with open("company_scraper/skip_terms.txt") as g:
                     skip = g.readlines()
-                    print(skip)
                 for letter1 in alpha_stop:
                     for letter2 in alpha_all:
                         for letter3 in alpha_all:
