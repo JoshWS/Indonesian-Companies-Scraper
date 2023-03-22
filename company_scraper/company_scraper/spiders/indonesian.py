@@ -21,10 +21,15 @@ class IndonesianSpider(Spider):
                 terms = f.readlines()
             for term in terms:
                 term = term.replace("\n", "")
-                url = f"https://companieshouse.id/?term={term}"
-                yield Request(
-                    url, callback=self.parse, errback=self.errback, dont_filter=True
-                )
+                term, pages = term.split(",")
+                for page in range(int(pages)):
+                    url = f"https://companieshouse.id/?term={term}&page={page + 1}"
+                    yield Request(
+                        url,
+                        callback=self.parse,
+                        errback=self.errback,
+                        dont_filter=True,
+                    )
         else:
             alpha = list(string.ascii_lowercase)
             alpha.reverse()
@@ -49,33 +54,31 @@ class IndonesianSpider(Spider):
                                     )
 
     def parse(self, response):
-        yield self.parse_pages(response)
-        next_page = response.xpath("//a[@rel='next']/@href").extract_first()
-        if next_page:
-            yield response.follow(
-                next_page,
-                callback=self.parse,
-                errback=self.errback,
-                dont_filter=True,
-            )
-
-    def parse_pages(self, response):
         l = ItemLoader(item=CompanyScraperItem(), response=response)
 
         names = l.get_xpath(
             "//ul[@class='py-2 text-sm']/li/div/a[1]/@title",
             MapCompose(str.strip),
         )
-
         if names:
             for name in names:
-                l.add_value("name", name)
+                yield self.parse_pages(response, name)
         else:
             with open("company_scraper/skip_terms.txt", "a") as f:
                 skip = response.request.url[-3:]
                 f.write(f"{skip}\n")
-            return
+        # next_page = response.xpath("//a[@rel='next']/@href").extract_first()
+        # if next_page:
+        #     yield response.follow(
+        #         next_page,
+        #         callback=self.parse,
+        #         errback=self.errback,
+        #         dont_filter=True,
+        # )
 
+    def parse_pages(self, response, name):
+        l = ItemLoader(item=CompanyScraperItem(), response=response)
+        l.add_value("name", name.strip())
         return l.load_item()
 
     def errback(self, failure):
